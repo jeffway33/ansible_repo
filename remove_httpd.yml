@@ -1,13 +1,31 @@
+---
+
 - hosts: all
   become: true
   tasks:
 
-  - name: install httpd package
+  - name: update repository index for Rocky
     dnf:
-      name: httpd
-      state: absent
-  
-  - name: install tmux
+      update_cache: yes
+    when: ansible_distribution == "Rocky"
+
+  - name: install apache2 and php packages for Rocky
     dnf:
-      name: tmux
+      name:
+        - httpd
+        - php
       state: absent
+    when: ansible_distribution == "Rocky"
+
+  - name: update repository index for Ubuntu
+    apt:
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: install apache2 and php packages for Ubuntu
+    apt:
+      name:
+        - apache2
+        - libapache2-mod-php
+      state: absent
+    when: ansible_distribution == "Ubuntu"

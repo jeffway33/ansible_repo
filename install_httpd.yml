@@ -1,13 +1,13 @@
+---
+
 - hosts: all
   become: true
   tasks:
 
-  - name: install httpd package
-    dnf:
-      name: httpd
+  - name: install apache and php
+    package:
+      name:
+        - "{{ apache_package }}"
+        - "{{ php_package }}"
       state: latest
-  
-  - name: install tmux
-    dnf:
-      name: tmux
-      state: latest
+      update_cache: yes

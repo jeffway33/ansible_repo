@@ -2,12 +2,22 @@
 
 - hosts: all
   become: true
-  tasks:
+  tasks: 
 
-  - name: install apache and php
-    package:
+  - name: install httpd for Rocky servers
+    dnf:
       name:
-        - "{{ apache_package }}"
-        - "{{ php_package }}"
+        - httpd
+        - php
       state: latest
       update_cache: yes
+    when: ansible_distribution == "Rocky"
+
+  - name: install apache and php for Ubuntu servers
+    apt:
+      name:
+        - apache2
+        - libapache2-mod-php
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"

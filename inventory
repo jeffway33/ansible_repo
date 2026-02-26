@@ -1,4 +1,9 @@
-192.168.1.251 apache_package=httpd php_package=php
-192.168.1.253 apache_package=httpd php_package=php
-192.168.1.254 apache_package=httpd php_package=php
-192.168.1.236 apache_package=apache2 php_package=libapache2-mod-php
+[file_servers]
+192.168.1.251  #rocky-node1
+
+[db_servers]
+192.168.1.253  #rocky-node2
+
+[web_servers]
+192.168.1.254  #rocky-node3 
+192.168.1.236  #ubuntu-postgresql

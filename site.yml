@@ -6,12 +6,14 @@
   pre_tasks: 
 
   - name: install updates (Rocky)
+    tags: always
     dnf:
       update_only: yes
       update_cache: yes
     when: ansible_distribution == "Rocky"
 
   - name: install updates (Ubuntu)
+    tags: always
     apt:
       upgrade: dist
       update_cache: yes
@@ -24,6 +26,7 @@
   tasks:
 
   - name: install httpd and php for Rocky servers
+    tags: apache, httpd, rocky
     dnf:
       name:
         - httpd
@@ -33,6 +36,7 @@
     when: ansible_distribution == "Rocky"
 
   - name: install apache and php for Ubuntu servers
+    tags: apache, apache2, ubuntu
     apt:
       name:
         - apache2
@@ -48,6 +52,7 @@
   tasks:
 
   - name: install mariadb package (Rocky)
+    tags: rocky, mariadb
     dnf: 
       name: 
         - mariadb
@@ -56,6 +61,7 @@
     when: ansible_distribution == "Rocky"
 
   - name: install mariadb package (Ubuntu)
+    tags: mariadb, ubuntu
     apt:
       name: mariadb-server
       state: latest
@@ -68,6 +74,7 @@
   tasks:
 
   - name: install samba package
+    tags: samba
     package:
       name: samba
       state: latest

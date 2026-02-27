@@ -1,0 +1,54 @@
+---
+
+# Update all servers
+- hosts: all
+  become: true
+  pre_tasks: 
+
+  - name: install updates (Rocky)
+    tags: always
+    dnf:
+      update_only: yes
+      update_cache: yes
+    when: ansible_distribution == "Rocky"
+
+  - name: install updates (Ubuntu)
+    tags: always
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+# Install the simone user
+- hosts: all
+  become: true
+  tasks:
+  
+  - name: create simone user (Rocky)
+    tags: rocky
+    user:
+      name: simone
+      group: wheel
+    when: ansible_distribution == "Rocky"
+
+  - name: create simone user (Ubuntu)
+    tags: ubuntu
+    user:
+      name: simone
+      group: sudo
+    when: ansible_distribution == "Ubuntu"
+
+  - name: add ssh key for simone
+    tags: always
+    authorized_key:
+      user: simone
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB+9kWqu59KDJhrkZ0rH0JMamomcCn0rX1UncbbDcnS2 rocky-ansible-control"
+    
+  - name: add sudoers file for simone
+    tags: always
+    copy:
+      src: sudoer_simone
+      dest: /etc/sudoers.d/simone
+      owner: root
+      group: root
+      mode: 0440

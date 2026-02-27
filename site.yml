@@ -5,19 +5,27 @@
   become: true
   pre_tasks: 
 
-  - name: install updates (Rocky)
+  - name: update repo cache (Rocky)
     tags: always
     dnf:
-      update_only: yes
       update_cache: yes
+    changed_when: false
     when: ansible_distribution == "Rocky"
 
-  - name: install updates (Ubuntu)
+  - name: update repo cache (Ubuntu)
     tags: always
     apt:
-      upgrade: dist
       update_cache: yes
+    changed_when: false
     when: ansible_distribution == "Ubuntu"
+
+
+  - name: add ssh key for simone
+    tags: always
+    authorized_key:
+      user: simone
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB+9kWqu59KDJhrkZ0rH0JMamomcCn0rX1UncbbDcnS2 rocky-ansible-control"
+    
 
 
 # Install http/apache2 on [web_servers]
@@ -35,6 +43,30 @@
       update_cache: yes
     when: ansible_distribution == "Rocky"
 
+  - name: start and enable httpd (Rocky)
+    tags: rocky, http, apache
+    service: 
+      name: httpd
+      state: started
+      enabled: yes
+    when: ansible_distribution == "Rocky"
+
+  - name: change email address for admin
+    tags: apache, rocky, httpd
+    lineinfile: 
+      path: /etc/httpd/conf/httpd.conf
+      regexp: '^ServerAdmin'
+      line: ServerAdmin somebody@somewhere.net
+    when: ansible_distribution == "Rocky"
+    register: httpd
+
+  - name: restart httpd (Rocky)
+    tags: apache, rocky, httpd
+    service:
+      name: httpd
+      state: restarted
+    when: httpd.changed
+
   - name: install apache and php for Ubuntu servers
     tags: apache, apache2, ubuntu
     apt:
@@ -44,7 +76,7 @@
       state: latest
       update_cache: yes
     when: ansible_distribution == "Ubuntu"
-  
+
   - name: copy default html file for site
     tags: apache, apache2, httpd
     copy:

@@ -1,0 +1,18 @@
+# Ansible
+*.retry
+
+# Python
+__pycache__/
+*.pyc
+
+# VS Code
+.vscode/
+
+# OS/editor noise
+.DS_Store
+
+# SSH / secrets / vaults
+*.pem
+*.key
+*.vault
+vault_pass.txt

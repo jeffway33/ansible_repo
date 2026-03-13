@@ -1,0 +1,12 @@
+[web]
+rocky-node1 ansible_host=192.168.1.248
+rocky-node2 ansible_host=192.168.1.253
+
+[db]
+rocky-node3 ansible_host=192.168.1.254
+
+[file]
+rocky-node4 ansible_host=192.168.1.251
+
+[all:vars]
+ansible_user=jway
